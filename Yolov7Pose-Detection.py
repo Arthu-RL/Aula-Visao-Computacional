@@ -95,14 +95,14 @@ while True:
 
     cv2.imshow('image', nimg)
     out.write(nimg)
-    # Press `q` to exit.
+    # Pressione `q` para sair.
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Release VideoCapture().
+# Realiza captura do video()
 cap.release()
-# Close all frames and video windows.
+# fecha todos os frames e janelas do video
 cv2.destroyAllWindows()
-# Calculate and print the average FPS.
+# Calcula e retorna o FPS
 avg_fps = total_fps / frame_count
 print(f"Average FPS: {avg_fps:.1f}")
