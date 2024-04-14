@@ -6,6 +6,7 @@ from cv2 import cvtColor, COLOR_RGB2BGR
 from general import non_max_suppression_kpt
 from plots import output_to_keypoint, plot_skeleton_kpts
 
+# By https://stackabuse.com/real-time-pose-estimation-from-video-in-python-with-yolov7/
 def draw_keypoints(model,  model_output, image): 
     output = non_max_suppression_kpt(output, 
                                     0.25, # Confidence Threshold
