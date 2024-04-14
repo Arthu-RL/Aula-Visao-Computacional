@@ -40,18 +40,18 @@ largura = int(cap.get(3))
 altura = int(cap.get(4))
 
 # Criando uma imagem com resize para funcionar no modelo yolov7 pose usando LetterBox 
-# LetterBox 
+# LetterBox: função usada para mudar as dimensões da imagem, sem afetar a quantidade de detalhes na imagem
 vid_write_image = letterbox(cap.read()[1], (largura), stride=64, auto=True)[0]
 
 # Altura e largura da imagem que sobre resize
-resize_height, resize_width = vid_write_image.shape[:2]
+Altura, largura = vid_write_image.shape[:2]
 
 save_name = f"{video_path.split('/')[-1].split('.')[0]}"
 
 # Criando um VideoWriter para escrever vídeo de inferência com dimensôes da imaem que sofreu resize
 out = cv2.VideoWriter(f"{save_name}_keypoint.mp4", 
                       cv2.VideoWriter_fourcc(*'mp4v'), 30, 
-                      (resize_width, resize_height))
+                      (largura, Altura))
 
 frame_count = 0 # Contador de frames
 total_fps = 0 # Total de frames por segundo
@@ -77,6 +77,7 @@ while True:
     image = image.half()
 
     start_time = time.time()
+
     with torch.no_grad():
         output, _ = model(image)
 
@@ -93,11 +94,7 @@ while True:
     cv2.putText(nimg, f"{fps:.1f} FPS", (15, 30), cv2.FONT_HERSHEY_SIMPLEX,
                 1, (0, 255, 0), 2)
 
-    cv2.imshow('image', nimg)
     out.write(nimg)
-    # Pressione `q` para sair.
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
 
 # Realiza captura do video()
 cap.release()
