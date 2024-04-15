@@ -17,7 +17,9 @@ python3 -m venv vision
 ### Ativar ambiente e instalar dependências com pip
 ```SHELL
 vision\Scripts\activate
+```
 
+```SHELL
 pip install -r requirements.txt
 ```
 
