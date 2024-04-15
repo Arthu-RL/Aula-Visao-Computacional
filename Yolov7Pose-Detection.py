@@ -80,8 +80,12 @@ while True:
     # Capturando imagem original e convertendo seus canais para RGB
     # Passando imagem na LetterBox Para o Resize
     imagem_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    imagem_redimensionada = letterbox(imagem_rgb, 512, stride=64, auto=True)[0]
-    imagem_tensor = transforms.ToTensor()(imagem_redimensionada).unsqueeze(0).to(device).float()
+    imagem_redimensionada = letterbox(imagem_rgb, 512, stride=64, auto=True)[0] # shape: (567, 960, 3) HWC
+
+    # tensor -> # torch.Size([3, 567, 960]) CHW
+    # unsqueeze(0) -> transformação para batch (lote), torch.Size([1, 3, 567, 960]) 1 -> tamanho lote 1 imagem
+    # Float() -> float32, aumenta a precisão dos números, o que é bom para CPU
+    imagem_tensor = transforms.ToTensor()(imagem_redimensionada).unsqueeze(0).to(device).float() 
 
     # Marca o tempo de início e posteriormente o fim da inferência para calcular FPS
     start_time = time.time()
