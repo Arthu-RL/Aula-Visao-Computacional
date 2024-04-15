@@ -33,7 +33,7 @@ modelo = modelo.to(device).float().eval()
 print("Modelo carregado!")
 
 # Abre um vídeo para processamento
-video_path = './dataset/video0.mp4'
+video_path = './dataset/video1.mp4'
 print("Abrindo vídeo:", video_path)
 cap = cv2.VideoCapture(video_path)
 
@@ -41,12 +41,15 @@ if not cap.isOpened():
     print("Falha ao abrir o vídeo")
     exit(1)
 
+# Lendo uma imagem para redimensiona-la
 lido, imagem = cap.read()
 
 if not lido:
     sys.exit(1)
 
+# Redimensionando imagem, sem a afetar a quantidade de detalhes dela
 imagem_reduzida = letterbox(imagem, 512, stride=64, auto=True)[0]
+# Capturando dimensões para criar um VideoWriter com estas dimensões
 altura, largura, _ = imagem_reduzida.shape
 
 # Nome da imagem
@@ -77,7 +80,7 @@ while True:
     # Capturando imagem original e convertendo seus canais para RGB
     # Passando imagem na LetterBox Para o Resize
     imagem_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    imagem_redimensionada = letterbox(imagem, 512, stride=64, auto=True)[0]
+    imagem_redimensionada = letterbox(imagem_rgb, 512, stride=64, auto=True)[0]
     imagem_tensor = transforms.ToTensor()(imagem_redimensionada).unsqueeze(0).to(device).float()
 
     # Marca o tempo de início e posteriormente o fim da inferência para calcular FPS
