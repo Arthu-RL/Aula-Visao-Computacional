@@ -86,25 +86,29 @@ cv2.waitKey(0)
 
 cv2.destroyAllWindows()
 
+
 # Capturar vídeo 
-caminhoVideo = "video.mp4"
+caminhoVideo = "./dataset/video1.mp4"
 cap = cv2.VideoCapture(caminhoVideo)
 
 if cap.isOpened() == False:
     print("Video não foi aberto!")
     sys.exit(1)
 
-numFrames = 0
+largura = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+altura = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+contador_imagens = 0
 
 while True:
-    ret, frame = cap.read()
+    lido, imagem = cap.read()
 
-    if not ret:
+    if not lido:
         break
 
-    numFrames += 1
+    contador_imagens += 1
 
-print(f"Total de frames capturados: {numFrames}")
+print(f"Total de frames capturados: {contador_imagens}")
 
 cap.release()
 cv2.destroyAllWindows()
