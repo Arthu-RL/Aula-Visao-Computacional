@@ -3,7 +3,7 @@ import numpy as np
 import sys
 
 # Carregar uma imagem
-caminhoImagem = './passaro.jpg' # Substitua por seu caminho de imagem
+caminhoImagem = './dataset/passaro.jpg' # Substitua por seu caminho de imagem
 imagem = cv2.imread(caminhoImagem)
 imagem = cv2.resize(imagem, dsize=(900, 500))
 cv2.imshow('Original imagem', imagem) 
