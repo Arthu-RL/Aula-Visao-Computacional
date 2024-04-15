@@ -6,4 +6,19 @@
 
 ## [Clues](https://stackabuse.com/real-time-pose-estimation-from-video-in-python-with-yolov7/)
 
-## [Download Weights](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt)
+## Preparar ambiente
+
+### Criar ambiente python
+```SHELL
+# python 3.9 para cima
+python3 -m venv vision
+```
+
+### Ativar ambiente e instalar dependências com pip
+```SHELL
+vision\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+### [Faça download do arquivo weights](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt)
