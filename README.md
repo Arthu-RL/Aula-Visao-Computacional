@@ -19,9 +19,9 @@ python -m venv vision
 vision\Scripts\activate
 ```
 
-### Atualizar pacote pip
+### Atualizar setuptools
 ```SHELL
-python -m pip install --upgrade pip
+python -m pip install --upgrade setuptools
 ```
 
 ```SHELL
