@@ -10,7 +10,6 @@
 
 ### Criar ambiente python
 ```SHELL
-# python 3.9 para cima
 python -m venv vision
 ```
 
@@ -19,13 +18,13 @@ python -m venv vision
 vision\Scripts\activate
 ```
 
-### Atualizar setuptools
-```SHELL
-python -m pip install --upgrade setuptools
-```
-
 ```SHELL
 pip install -r requirements.txt
 ```
 
 ### [Faça download do arquivo weights](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt)
+
+### Rodar Código
+```SHELL
+python Yolov7Pose-Detection.py
+```
