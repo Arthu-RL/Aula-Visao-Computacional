@@ -11,12 +11,17 @@
 ### Criar ambiente python
 ```SHELL
 # python 3.9 para cima
-python3 -m venv vision
+python -m venv vision
 ```
 
 ### Ativar ambiente e instalar dependências com pip
 ```SHELL
 vision\Scripts\activate
+```
+
+### Atualizar pacote pip
+```SHELL
+python -m pip install --upgrade pip
 ```
 
 ```SHELL
