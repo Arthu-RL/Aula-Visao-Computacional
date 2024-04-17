@@ -30,3 +30,10 @@ pip install -r requirements.txt
 ```SHELL
 python Yolov7Pose-Detection.py
 ```
+
+### Autores 
+
+#### Richard Francis da Cunha Junior
+
+#### Arthur Rodrigues Lima 
+
