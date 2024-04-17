@@ -33,7 +33,7 @@ modelo = modelo.to(device).float().eval()
 print("Modelo carregado!")
 
 # Abre um vídeo para processamento
-video_path = './dataset/video1.mp4'
+video_path = './dataset/video0.mp4'
 print("Abrindo vídeo:", video_path)
 cap = cv2.VideoCapture(video_path)
 
@@ -56,7 +56,7 @@ altura, largura, _ = imagem_reduzida.shape
 nome_arquivo = f"{video_path.split('/')[-1].split('.')[0]}"
 
 # Definindo codec como MP4V
-codec = cv2.VideoWriter_fourcc(*'MP4V')
+codec = cv2.VideoWriter_fourcc(*'mp4v')
 
 # Criando um VideoWriter para escrever vídeo de inferência com dimensôes da imaem que sofreu resize
 output_video = cv2.VideoWriter(f"./{nome_arquivo}_keypoints.mp4", codec, 30, (largura, altura))
@@ -79,8 +79,7 @@ while True:
     
     # Capturando imagem original e convertendo seus canais para RGB
     # Passando imagem na LetterBox Para o Resize
-    imagem_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    imagem_redimensionada = letterbox(imagem_rgb, 512, stride=64, auto=True)[0] # shape: (567, 960, 3) HWC
+    imagem_redimensionada = letterbox(frame, 512, stride=64, auto=True)[0] # shape: (567, 960, 3) HWC
 
     # tensor -> # torch.Size([3, 567, 960]) CHW
     # unsqueeze(0) -> transformação para batch (lote), torch.Size([1, 3, 567, 960]) 1 -> tamanho lote 1 imagem
@@ -123,7 +122,7 @@ while True:
 cap.release()
 
 # Fecha todos os frames e janelas do video
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
 
 # Calcula e retorna o FPS
 avg_fps = total_fps / frame_count

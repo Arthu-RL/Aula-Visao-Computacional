@@ -88,7 +88,7 @@ cv2.destroyAllWindows()
 
 
 # Capturar vídeo 
-caminhoVideo = "./dataset/video1.mp4"
+caminhoVideo = "./dataset/video0.mp4"
 cap = cv2.VideoCapture(caminhoVideo)
 
 if cap.isOpened() == False:

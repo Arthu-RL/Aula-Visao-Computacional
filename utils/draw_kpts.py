@@ -18,10 +18,8 @@ def desenhar_keypoints(modelo,  saida, imagem):
     
     with no_grad():
         saida = output_to_keypoint(saida) # Converte para formato -> [batch_id, class_id, x, y, w, h, conf]
-
-    imagem_kpts = cv2.cvtColor(imagem, cv2.COLOR_RGB2BGR) # TO COMMENT
     
     for idx in range(saida.shape[0]):
-        plot_skeleton_kpts(imagem_kpts, saida[idx, 7:].T, 3) # Desenha os keypoints na imagem
+        plot_skeleton_kpts(imagem, saida[idx, 7:].T, 3) # Desenha os keypoints na imagem
 
-    return imagem_kpts
+    return imagem
