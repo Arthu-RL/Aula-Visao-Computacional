@@ -6,6 +6,8 @@
 
 ## [Clues](https://stackabuse.com/real-time-pose-estimation-from-video-in-python-with-yolov7/)
 
+## [More Clues](https://learnopencv.com/yolov7-object-detection-paper-explanation-and-inference/)
+
 ## Preparar ambiente
 
 ### Criar ambiente python
