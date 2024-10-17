@@ -7,53 +7,67 @@ Letterbox é uma função definida no módulo datasets do pacote utils. É usado
 # importa bibliotecas necessárias, incluindo torch para deep learning e transforms para pré-processamento de imagem
 import torch
 from torchvision import transforms
+import argparse
+import logging as log
+import os
+
 from utils.datasets import letterbox
 from utils.draw_kpts import desenhar_keypoints
+# from models.yolo import Model
 
 # importa bibliotecas para manipulação de imagens e gráficos
-import numpy as np
+# import numpy as np
 import cv2
 
 # importa bibliotecas para medição de tempo e interação com o sistema
 import time
-import sys
 
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-device = torch.device("cpu") # define o dispositivo de computação
+log.basicConfig(level=log.INFO, format='%(levelname)s: %(message)s')
 
-print("Dispositivo:", device)
+parser: argparse.ArgumentParser = argparse.ArgumentParser(description="YoloV7Pose Detection")
 
-print("Carregando modelo...")
+parser.add_argument('-v', '--video_path', dest='video_path', type=str, help='Caminho para o vídeo', default='./dataset/video0.mp4')
+
+args: argparse.Namespace = parser.parse_args()
+
+video_path = args.video_path
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cpu") # define o dispositivo de computação
+
+log.info(f"Dispositivo: {device}")
+
+log.info("Carregando modelo...")
 
 # Carrega o modelo YOLOv7 pré-treinado e o coloca em modo de avaliação
 # modelo = torch.hub.load('WongKinYiu/yolov7', 'yolov7-w6-pose.pt', pretrained=True, trust_repo=True, force_reload=True).autoshape()
-modelo = torch.load('yolov7-w6-pose.pt', map_location=torch.device(device))['model']
+# torch.serialization.add_safe_globals([Model])
+modelo = torch.load('yolov7-w6-pose.pt', map_location=torch.device(device), weights_only=False)['model']
 modelo = modelo.to(device).float().eval()
 
-print("Modelo carregado!")
+log.info("Modelo carregado!")
 
 # Abre um vídeo para processamento
-video_path = './dataset/video0.mp4'
-print("Abrindo vídeo:", video_path)
+log.info(f"Abrindo vídeo: {video_path}")
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
-    print("Falha ao abrir o vídeo")
+    log.info("Falha ao abrir o vídeo")
     exit(1)
 
 # Lendo uma imagem para redimensiona-la
 lido, imagem = cap.read()
 
 if not lido:
-    sys.exit(1)
+    exit(1)
 
 # Redimensionando imagem, sem a afetar a quantidade de detalhes dela
-imagem_reduzida = letterbox(imagem, 512, stride=64, auto=True)[0]
+imagem_reduzida = letterbox(imagem, 512, stride=32, auto=False)[0]
 # Capturando dimensões para criar um VideoWriter com estas dimensões
 altura, largura, _ = imagem_reduzida.shape
 
 # Nome da imagem
-nome_arquivo = f"{video_path.split('/')[-1].split('.')[0]}"
+nome_arquivo = os.path.splitext(os.path.basename(video_path))[0]
 
 # Definindo codec como MP4V
 codec = cv2.VideoWriter_fourcc(*'mp4v')
@@ -61,9 +75,9 @@ codec = cv2.VideoWriter_fourcc(*'mp4v')
 # Criando um VideoWriter para escrever vídeo de inferência com dimensôes da imaem que sofreu resize
 output_video = cv2.VideoWriter(f"./{nome_arquivo}_keypoints.mp4", codec, 30, (largura, altura))
 
-print("Vídeo foi aberto e suas informações como, altura e largura das imagens, foram definidas com sucesso!")
+log.info("Vídeo foi aberto e suas informações como, altura e largura das imagens, foram definidas com sucesso!")
 
-print("Começando inferência do modelo e escrita do vídeo de saída...")
+log.info("Começando inferência do modelo e escrita do vídeo de saída...")
 
 # inicializa contadores
 frame_count = 0 # Contador de frames
@@ -89,7 +103,7 @@ while True:
     # Marca o tempo de início e posteriormente o fim da inferência para calcular FPS
     start_time = time.time()
 
-    print("On frame:", frame_count)
+    log.info(f"On frame: {frame_count}")
 
     # Realiza a detecção de pose usando o modelo YOLOv7
     with torch.no_grad():
@@ -127,5 +141,5 @@ cap.release()
 # Calcula e retorna o FPS
 avg_fps = total_fps / frame_count
 
-print("Vídeo escrito com sucesso!")
-print(f"Average FPS: {avg_fps:.1f}")
+log.info("Vídeo escrito com sucesso!")
+log.info(f"Average FPS: {avg_fps:.1f}")

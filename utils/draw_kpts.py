@@ -4,9 +4,6 @@ from torch import no_grad
 from utils.general import non_max_suppression_kpt
 from utils.plots import output_to_keypoint, plot_skeleton_kpts
 
-import cv2
-from numpy import uint8
-
 
 def desenhar_keypoints(modelo,  saida, imagem): 
     saida = non_max_suppression_kpt(saida, 
@@ -15,10 +12,10 @@ def desenhar_keypoints(modelo,  saida, imagem):
                                         nc=modelo.yaml['nc'], # Número de classes
                                         nkpt=modelo.yaml['nkpt'], # Número de Keypoints
                                         kpt_label=True)
-    
+
     with no_grad():
         saida = output_to_keypoint(saida) # Converte para formato -> [batch_id, class_id, x, y, w, h, conf]
-    
+
     for idx in range(saida.shape[0]):
         plot_skeleton_kpts(imagem, saida[idx, 7:].T, 3) # Desenha os keypoints na imagem
 
