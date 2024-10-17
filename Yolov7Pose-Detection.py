@@ -93,7 +93,7 @@ while True:
     
     # Capturando imagem original e convertendo seus canais para RGB
     # Passando imagem na LetterBox Para o Resize
-    imagem_redimensionada = letterbox(frame, 512, stride=64, auto=True)[0] # shape: (567, 960, 3) HWC
+    imagem_redimensionada = letterbox(frame, 512, stride=32, auto=False)[0] # shape: (567, 960, 3) HWC
 
     # tensor -> # torch.Size([3, 567, 960]) CHW
     # unsqueeze(0) -> transformação para batch (lote), torch.Size([1, 3, 567, 960]) 1 -> tamanho lote 1 imagem
@@ -103,7 +103,7 @@ while True:
     # Marca o tempo de início e posteriormente o fim da inferência para calcular FPS
     start_time = time.time()
 
-    log.info(f"On frame: {frame_count}")
+    log.info(f"Frame {frame_count}")
 
     # Realiza a detecção de pose usando o modelo YOLOv7
     with torch.no_grad():
