@@ -11,24 +11,29 @@
 ## Preparar ambiente
 
 ### Criar ambiente python
-```SHELL
+```sh
 python -m venv vision
 ```
 
 ### Ativar ambiente e instalar dependências com pip
-```SHELL
+```sh
 vision\Scripts\activate
 ```
 
-```SHELL
+```sh
 pip install -r requirements.txt
 ```
 
 ### [Faça download do arquivo weights](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt)
 
 ### Rodar Código
-```SHELL
+
+```sh
 python Yolov7Pose-Detection.py
+```
+
+```sh
+python Yolov7Pose-Detection.py --src="rtsp://192.168.x.x:8080/h264_ulaw.sdp" -t 1
 ```
 
 ### Autores 
