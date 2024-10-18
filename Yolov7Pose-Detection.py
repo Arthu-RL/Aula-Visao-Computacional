@@ -35,12 +35,18 @@ def int_or_str(value):
     except ValueError:
         return value
 
+def tensor_float16(tensor: torch.Tensor) -> torch.Tensor:
+    return tensor.to(torch.float16)
+
+def tensor_float32(tensor: torch.Tensor) -> torch.Tensor:
+    return tensor.to(torch.float32)
+
 parser: argparse.ArgumentParser = argparse.ArgumentParser(description="YoloV7Pose Detection")
 
 parser.add_argument('-s', '--src', dest='src', type=int_or_str, help='Caminho para o vídeo', default='./dataset/video0.mp4')
 parser.add_argument('-t', '--stream_type', dest='stream_type', type=int, help='Tipo de streaming', default=StreamType.FILE.value)
 parser.add_argument('-l', '--width', dest='width', type=int, help='Largura de cada frame', default=1024)
-parser.add_argument('-a', '--height', dest='height', type=int, help='Altura de cada frame', default=1024)
+parser.add_argument('-a', '--height', dest='height', type=int, help='Altura de cada frame', default=768)
 parser.add_argument('-o', '--output', dest='output', action="store_true", help='Se teremos escrita de vídeo', required=False)
 parser.add_argument('-n', '--window_name', dest='window_name', type=str, help='Nome da janela', default='Video Streaming')
 
@@ -64,7 +70,19 @@ log.info("Carregando modelo...")
 # modelo = torch.hub.load('WongKinYiu/yolov7', 'yolov7-w6-pose.pt', pretrained=True, trust_repo=True, force_reload=True).autoshape()
 # torch.serialization.add_safe_globals([Model])
 modelo = torch.load('yolov7-w6-pose.pt', map_location=torch.device(device), weights_only=False)['model']
-modelo = modelo.to(device).float().eval()
+modelo = modelo.to(device)
+
+tensor_type_callback: callable = None
+
+if gpu:
+    modelo = modelo.half()
+    tensor_type_callback = tensor_float16
+else:
+    modelo = modelo.float()
+    tensor_type_callback = tensor_float32
+
+modelo = modelo.eval()
+
 log.info("Modelo carregado!")
 
 cap: InputVideoCapture = InputVideoCapture(src=src, stream_type=stream_type, resize=size)
@@ -80,8 +98,8 @@ if output:
 log.info("Começando inferência do modelo e escrita do vídeo de saída...")
 
 # inicializa contadores
-frame_count = 0 # Contador de frames
-# total_fps = 0 # Total de frames por segundo
+frame_count = 0
+# total_fps = 0
 
 cv2.namedWindow(win_name)
 
@@ -89,6 +107,9 @@ while True:
     # Captura cada frame (frame) do video
     # ret é um bool que diz se o frame foi capturado ou não
     ret, frame = cap.read()
+
+    if not ret:
+        break
     
     # # Capturando imagem original e convertendo seus canais para RGB
     # # Passando imagem na LetterBox Para o Resize
@@ -97,14 +118,11 @@ while True:
     # tensor -> # torch.Size([3, 567, 960]) CHW
     # unsqueeze(0) -> transformação para batch (lote), torch.Size([1, 3, 567, 960]) 1 -> tamanho lote 1 imagem
     # Float() -> float32, aumenta a precisão dos números, o que é bom para CPU
-    imagem_tensor: torch.Tensor = transforms.ToTensor()(frame).unsqueeze(0).to(device).float()
-    # if gpu:
-    #     imagem_tensor = imagem_tensor.to(torch.float16)
-    # else:
-    #     imagem_tensor = imagem_tensor.to(torch.float32)
+    imagem_tensor: torch.Tensor = transforms.ToTensor()(frame).unsqueeze(0).to(device)
+    imagem_tensor: torch.Tensor = tensor_type_callback(tensor=imagem_tensor)
 
     # Marca o tempo de início e posteriormente o fim da inferência para calcular FPS
-    # start_time = time.time()
+    start_time = time.time()
 
     # log.info(f"Frame {frame_count}")
 
@@ -116,10 +134,10 @@ while True:
         """
         saida, _ = modelo(imagem_tensor)
 
-    # end_time = time.time()
+    end_time = time.time()
 
     # # calculando FPS
-    # fps = 1 / (end_time - start_time)
+    
     # total_fps += fps
 
     frame_count += 1
@@ -127,10 +145,12 @@ while True:
     # Escreve keypoints detectados em cada frame
     imagem_com_kpts = desenhar_keypoints(modelo, saida, frame)
 
+    fps = 1 / (end_time - start_time)
+
     # Escreve FPS em frame
     # image = image.numpy().astype(np.uint8)
-    # cv2.putText(imagem_com_kpts, f"{fps:.1f} FPS", (15, 30), cv2.FONT_HERSHEY_SIMPLEX,
-    #             1, (0, 255, 0), 2)
+    cv2.putText(imagem_com_kpts, f"{fps:.1f} FPS", (15, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                1, (0, 255, 0), 2)
 
     cv2.imshow(win_name, imagem_com_kpts)
 
@@ -141,7 +161,7 @@ while True:
     key = cv2.waitKey(1) & 0xFF
 
     if key == ord('q'):
-        log.info("Quitting!")
+        log.info(f"Finished! Frames processed {frame_count}")
         if stream_type == StreamType.RTSP.value:
             cap.destroy()
         break
@@ -149,7 +169,7 @@ while True:
         cv2.imwrite(f"opencv_frame_{frame_count}.png", imagem_com_kpts)
 
 # Libera captura do video de output
-cap.release()
+cap.destroy()
 
 # Fecha todos os frames e janelas do video
 cv2.destroyAllWindows()
@@ -157,5 +177,5 @@ cv2.destroyAllWindows()
 # Calcula e retorna o FPS
 # avg_fps = total_fps / frame_count
 
-log.info("Vídeo escrito com sucesso!")
+log.info("Vídeo processado com sucesso!")
 # log.info(f"Average FPS: {avg_fps:.1f}")
