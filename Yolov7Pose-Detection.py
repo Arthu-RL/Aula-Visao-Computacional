@@ -88,8 +88,9 @@ log.info("Modelo carregado!")
 cap: InputVideoCapture = InputVideoCapture(src=src, stream_type=stream_type, resize=size)
 out_video_writer: Optional[OutputVideoWriter] = None
 
+os.makedirs("./output/screenshots", exist_ok=True)
+
 if output:
-    os.makedirs("./output", exist_ok=True)
     out_video_writer = OutputVideoWriter(output_path="./output/output_video_writer.mp4", fps=cap.fps, size=size)
 
 
@@ -166,7 +167,7 @@ while True:
             cap.destroy()
         break
     elif key == ord('p'):
-        cv2.imwrite(f"opencv_frame_{frame_count}.png", imagem_com_kpts)
+        cv2.imwrite(f"./output/screenshots/opencv_frame_{frame_count}.png", imagem_com_kpts)
 
 # Libera captura do video de output
 cap.destroy()
