@@ -8,13 +8,13 @@ Letterbox é uma função definida no módulo datasets do pacote utils. É usado
 import torch
 from torchvision import transforms
 
-from urllib.parse import urlparse
+# from urllib.parse import urlparse
 from typing import Any, Tuple, Union, Optional
 import argparse
 import logging as log
 import os
 
-from utils.datasets import letterbox
+# from utils.datasets import letterbox
 from utils.draw_kpts import desenhar_keypoints
 from utils.outputvideowriter import OutputVideoWriter
 from utils.inputvideocapture import InputVideoCapture, StreamType
