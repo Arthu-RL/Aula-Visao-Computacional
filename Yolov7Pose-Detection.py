@@ -9,7 +9,7 @@ import torch
 from torchvision import transforms
 
 # from urllib.parse import urlparse
-from typing import Any, Tuple, Union, Optional
+from typing import Tuple, Union, Optional
 import argparse
 import logging as log
 import os
@@ -21,7 +21,7 @@ from utils.inputvideocapture import InputVideoCapture, StreamType
 # from models.yolo import Model
 
 # importa bibliotecas para manipulação de imagens e gráficos
-import numpy as np
+# import numpy as np
 import cv2
 
 # importa bibliotecas para medição de tempo e interação com o sistema

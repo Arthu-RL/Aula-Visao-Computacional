@@ -28,12 +28,22 @@ pip install -r requirements.txt
 
 ### Rodar Código
 
+FILE
+
 ```sh
 python Yolov7Pose-Detection.py
 ```
 
+RTSP
+
 ```sh
 python Yolov7Pose-Detection.py --src="rtsp://192.168.x.x:8080/h264_ulaw.sdp" -t 1
+```
+
+WEBCAM
+
+```sh
+python Yolov7Pose-Detection.py --src 0 -t 0 -o
 ```
 
 ### Autores 
