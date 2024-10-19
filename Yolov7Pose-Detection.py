@@ -90,7 +90,7 @@ out_video_writer: Optional[OutputVideoWriter] = None
 
 if output:
     os.makedirs("./output", exist_ok=True)
-    out_video_writer = OutputVideoWriter(output_path="./output", fps=cap.fps, size=size)
+    out_video_writer = OutputVideoWriter(output_path="./output/output_video_writer.mp4", fps=cap.fps, size=size)
 
 
 # lido, imagem = cap.read()
@@ -156,7 +156,7 @@ while True:
 
     # Escreve imagem no vídeo de output
     if output:
-        out_video_writer.write(np.ndarray(imagem_com_kpts))
+        out_video_writer.write(imagem_com_kpts)
     
     key = cv2.waitKey(1) & 0xFF
 
