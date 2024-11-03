@@ -161,13 +161,14 @@ while True:
     
     key = cv2.waitKey(1) & 0xFF
 
-    if key == ord('q'):
+    if key == ord('q') or key == 27:
         log.info(f"Finished! Frames processed {frame_count}")
         if stream_type == StreamType.RTSP.value:
             cap.destroy()
         break
     elif key == ord('p'):
         cv2.imwrite(f"./output/screenshots/opencv_frame_{frame_count}.png", imagem_com_kpts)
+        log.info(f"Screenshot taken!")
 
 # Libera captura do video de output
 cap.destroy()
