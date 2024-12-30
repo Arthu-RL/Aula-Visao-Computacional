@@ -46,9 +46,3 @@ WEBCAM
 python Yolov7Pose-Detection.py --src 0 -t 0 -o
 ```
 
-### Autores 
-
-#### Richard Francis da Cunha Junior
-
-#### Arthur Rodrigues Lima 
-
